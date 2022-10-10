@@ -1,0 +1,471 @@
+---
+title: "STATISTICAL INFERENCE"
+subtitle: "a guide to the unknown"
+author: "Austin Hart"
+institute: "American University"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: [default, rladies, rladies-fonts]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  message=FALSE, warning=FALSE, eval = TRUE, echo = FALSE, 
+  fig.align = 'center', dev='svg'
+)
+```
+
+```{r results='hide'}
+library(tidyverse)
+library(magrittr)
+library(kableExtra)
+
+setwd("C:/Users/ahart/Documents/StatInference")
+load('DCPS testing.RData')
+load('anes2012 workshop.RData')
+```
+
+
+# 2 flavors of inference
+
+
+- **CAUSAL** inference  
+  - Attribution of cause to an outcome (X caused Y)  
+  - Inference b/c of FPCI  
+  
+- **STATISTICAL** inference  
+  - Educated guess about population given sample
+  - Inference b/c population parameter unseen/unknowable
+
+
+---
+# Statistical Inference, 2 ways
+
+1. **Confidence intervals**: add "margin of error" to construct a range of plausibility around your estimate. 
+
+2. **Hypothesis testing**: calculate probability of observing your sample given some assumption about the population
+
+
+---
+class: inverse, middle
+
+# WHY STATISTICAL INFERENCE?
+
+### Sampling variability
+
+
+---
+# Sampling and the need for inference
+
+> What can data from a single sample tell us about the 
+> population from which it was drawn?  
+  
+
+- **Population**: entire group of units study aims to learn about
+
+- **Parameter**: true characteristics of the population, e.g., $\mu_Y$
+
+- **Sample**: "slice" of data from the population
+
+- **Sample statistic**: charactersitic of the sampled units, e.g., $\bar{Y}$
+
+- **Estimation**: sample stat as guide to pop parameter.
+
+- **Sampling Variability**: Every. Slice. Is. Different.
+
+
+
+---
+# Every sample statistic is different.
+
+Variability in sample statistics
+
+- Different across samples: $\bar{Y}_1 \neq \bar{Y}_2$
+
+- Different from target parameter: $\bar{Y}_1 \neq \mu$
+
+
+---
+# Sampling variability in action
+
+Consider the DCPS math proficiency, 2017
+
+.pull-left[
+Population parameters
+- Pop size (N) = 108  
+- $\mu$ = `r round(mean(dcps$ProfMath),1)`  
+
+]
+
+.pull-right[
+```{r pop, fig.width=3.5, fig.height=4, dpi=200}
+  hist(dcps$ProfMath,
+       main = "Math Proficiency, DCPS 2017",
+       xlab = "% testing at grade level", 
+       xlim = c(0,100), col="#69b3a2")
+  abline(v = mean(dcps$ProfMath), col = 'red')
+```
+
+]
+
+---
+# Take a sample...
+
+```{r samples}
+s1 = pull(dcps, ProfMath) %>% sample(size = 25)
+s2 = pull(dcps, ProfMath) %>% sample(size = 25)
+```
+
+.pull-left[
+### Random Sample 1 (n = 25)
+- $\bar{Y}_1$ = `r round(mean(s1),1)`
+
+```{r s1, fig.width=3.5, fig.height=4, dpi=200}
+  hist(s1,
+       main = "Sample 1",
+       xlab = "% testing at grade level", 
+       xlim = c(0,100), col="#69b3a2")
+  abline(v = mean(s1), col = 'red')
+```
+
+]
+
+.pull-right[
+### Random Sample 2 (n = 25)
+- $\bar{Y}_2$ = `r round(mean(s2),1)`
+
+```{r s2, fig.width=3.5, fig.height=4, dpi=200}
+  hist(s2,
+       main = "Sample 2",
+       xlab = "% testing at grade level", 
+       xlim = c(0,100), col="#69b3a2")
+  abline(v = mean(s2), col = 'red')
+```
+
+]
+
+
+---
+class: inverse, middle
+
+# SAMLING DISTRIBUTION
+
+### The first step to inference
+
+
+---
+# ALL the sample statistics
+
+- Select a random sample, size 25.
+- Calculate the mean math proficiency.
+- Repeat 20,000 times.
+- Plot the results.
+
+
+---
+# Meet the sampling distribution
+
+> Sampling distribution: distribution of ALL possible/observable sample statistics from a population.
+
+
+```{r draws}
+l = NULL
+
+for (i in 1:20000) {
+  l[i] = pull(dcps, ProfMath) %>% sample(size = 25) %>% mean()
+}
+  
+```
+
+.pull-left[
+
+```{r sdist, fig.width=3.5, fig.height=3.5, dpi=200}
+
+  hist(l,
+       main = "20,000 sample means",
+       xlab = "Sample mean", 
+       col="#69b3a2")
+  abline(v = mean(l), col = 'red')
+  
+```
+]
+
+.pull-right[  
+Our sampling dist  
+- Mean: `r round(mean(l),1)`
+- Median: `r round(median(l),1)`
+- Range: `r round(min(l),1)` to `r round(max(l),1)`
+- SD/SE: `r round(sd(l),1)`  
+]
+
+
+---
+class: inverse, middle
+
+# CENTRAL LIMIT THEOREM
+
+
+---
+# CLT and the Sampling Distribution
+
+> Sampling variability highlights the uncertainty of inference: we don't know if our sample stat is close to the target parameter.
+> But...
+> the Central Limit Theorem proves that the sampling distribution of a mean...
+
+
+- Normal distribution
+
+- Mean = $\mu$
+
+- Standard error $\sigma_{\bar{Y}} = s_Y / \sqrt{n}$
+
+
+---
+# So what, CLT?
+
+```{r sclt, fig.width=4, fig.height=3, dpi=350}
+  hist(l,
+       main = "Sampling distribution",
+       xlab = "Sample mean", 
+       col="#69b3a2")
+  abline(v = mean(l), col = 'red')
+  
+```
+
+- Population mean = 27; Sampling mean = `r round(mean(l),1)`
+- SE = `r round(sd(l),1)`
+- % sample means within 2 SEs: `r round(sum(!is.na(l[l>27-2*sd(l) & l < 27+2*sd(l)]))/200,1)`
+
+
+---
+# If you know 1 normal distribution...
+
+**68-95-99 rule**
+
+- 68% of sample means within 1 SE of $\mu$
+- *95% within 2 SEs*
+- 99.7% within 3 SEs
+
+```{r sclt2, fig.width=4, fig.height=3, dpi=350}
+  hist(l,
+       main = "Sampling distribution",
+       xlab = "Sample mean", 
+       col="#69b3a2")
+  abline(v = mean(l), col = 'red')
+  abline(v = mean(l)-2*sd(l), col = 'blue')
+  abline(v = mean(l)+2*sd(l), col = 'blue')
+  
+```
+
+
+---
+class: inverse, middle
+
+# CONFIDENCE INTERVALS
+
+### Embracing uncertainty
+
+
+---
+# Building a confidence interval
+
+> Your sample mean is w/i 2 SEs of the true population mean.
+> The chance I'm wrong? Only 5%.
+
+$$
+\bar{Y} \pm (2*\sigma_{\bar{Y}})
+$$
+
+- Sample stat: sample mean, $\bar{Y}$, or proportion, $\hat{p}$  
+
+- Margin of error: $2 * \sigma_{\bar{Y}}$ 
+
+
+---
+# Knowing your margin of error
+
+- SE, Sample mean
+$$
+\sigma_{\bar{Y}} = \frac{s_Y}{\sqrt{n}}
+$$
+
+- SE, Sample proportion  
+$$
+\sigma_{\hat{p}} = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+$$
+  
+- Critical statistic (approximations)
+  - 68% confidence: 1
+  - 95% confidence: 2
+  - 99.7% confidence: 3
+  
+
+---
+class: inverse, middle
+
+# STATISTICAL INFERENCE
+Pulling it all together
+
+---
+# Your own CI
+
+> The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
+> The mean resentment index score is 0.66, w/a standard deviation of 0.24.
+>
+> Calculate and interpret a 95% confidence interval.
+
+--
+
+.pull-left[
+- *What we know:*
+  - n = 3,273
+  - $\bar{Y}=0.66$
+  - $s_Y = 0.24$
+
+]
+
+--
+
+.pull-right[
+- *What we need:* $\bar{Y} \pm (2*\sigma_{\bar{Y}})$
+  - Standard error, $\sigma_{\bar{Y}}=s_Y/\sqrt{n}$ 
+  - Margin of error $2*\sigma_{\bar{Y}}$
+  - Interval $\bar{Y} \pm ME$
+]
+  
+---
+# Reporting your CI
+
+> The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
+> The mean resentment index score is 0.66, w/a standard deviation of 0.24.
+>
+> Calculate and interpret a 95% confidence interval.
+
+I am 95% confident that the range 0.652 to 0.668 captures the mean resentment index score for the population of white, non-Hispanic adults in 2012.
+
+
+
+---
+class: inverse, middle
+
+# HYPOTHESIS TESTING
+
+### Your data versus the status quo
+
+---
+# Logic of hypothesis testing
+
+### (Null) hypothesis testing
+
+> Process of calculating the probability of your sample data given some hypothesis about the population.
+> That probability is the basis for rejecting or not rejecting that hypothesis.
+
+Procedure:
+- Specify hypotheses
+  - Null hypothesis: status quo expectation
+  - Alternative: your expectation
+- Calculate $Pr(data|H_0)$; e.g., $Pr(\bar{Y} \geq 7.2 | \mu_Y = 0)$
+
+
+
+---
+# Setting up hypotheses
+
+- Alternative hypothesis, $H_A$
+  - *Your* expectation of the population/truth
+  - Empirical implication of your theory
+
+- Null hypothesis, $H_0$
+  - Pure logical opposite of $H_A$
+  - Status quo expectation: you've found nothing new
+
+- TIPS
+  - ALWAYS frame hypotheses in terms of parameters
+  - Science is all about the null. 
+  
+  
+---
+# To reject or not to reject?
+
+> On what grounds can I reject the null hypothesis?
+
+- Default position: status quo wins
+  - fail to reject the null
+  - Stick with conventional wisdom
+  
+- Reject the null
+  - *iff* sample stat is totally implausible given $H_0$
+  - typically $p \leq 0.05$
+
+
+---
+# The meaning of a p-value
+
+> If the conventional wisdom is true, what share of samples reveal a stat or association like yours? 
+
+
+$$
+p = Pr(Sample~Stat | H_0)
+$$
+
+
+
+```{r scltht, fig.width=4, fig.height=3, dpi=350}
+  hist(l,
+       main = "Hypothesized sampling distribution",
+       xlab = "Sample means", 
+       col="#69b3a2")
+  abline(v = mean(l), col = 'red')
+  abline(v = mean(l)+0.8*sd(l), col = 'blue',lt7=3)
+  abline(v = mean(l)+2.5*sd(l), col = 'blue')
+  
+```
+
+
+---
+# Your own CI
+
+> The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
+> The mean resentment index score is 0.66.
+>
+> Evaluate the null hypothesis that the population is racially neutral or liberal on this scale.
+
+```{r filt}
+
+df = df %>% filter(raceeth.selfid==1)
+
+```
+
+--
+
+```{r ttest, echo=TRUE}
+
+t.test(df$resent.index, mu = 0.5, alternative = 'greater')
+
+```
+
+---
+# Present your hypothesis test
+
+> The mean resentment index score among white, non-Hispanic respondents in the 2012 ANES equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population $(t = 38.3$, $p < 0.001)$ and we conclude that the population mean is significantly more conservative than the neutral point on this scale. 
+>
+
+---
+class: inverse
+# Wrapping up
+
+- Sample statistics are variable
+- Sampling distributions are well-defined
+
+- Embrace uncertainty with confidence intervals
+  - pad your estimate by the margin of error
+  
+- Test specific hypotheses about the population
+  - find probability of your sample given status quo null
