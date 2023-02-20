@@ -18,7 +18,7 @@ output:
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   message=FALSE, warning=FALSE, eval = TRUE, echo = FALSE, 
-  fig.align = 'center', dev='svg'
+  fig.align = 'center', dev='svglite'
 )
 ```
 
@@ -27,13 +27,12 @@ library(tidyverse)
 library(magrittr)
 library(kableExtra)
 
-setwd("C:/Users/ahart/Documents/StatInference")
 load('DCPS testing.RData')
 load('anes2012 workshop.RData')
 ```
 
 
-# 2 flavors of inference
+# 3 flavors of inference
 
 
 - **CAUSAL** inference  
@@ -41,8 +40,12 @@ load('anes2012 workshop.RData')
   - Inference b/c of FPCI  
   
 - **STATISTICAL** inference  
-  - Educated guess about population given sample
+  - Educated guess about "population" given sample
   - Inference b/c population parameter unseen/unknowable
+  
+- **EXTERNAL VALIDITY** inference
+  - Educated guess about generalizability of findings
+  - Considers other units, treatments, outcomes, settings, etc
 
 
 ---
@@ -50,7 +53,11 @@ load('anes2012 workshop.RData')
 
 1. **Confidence intervals**: add "margin of error" to construct a range of plausibility around your estimate. 
 
+> I am 95% confidence that the range 10.4 to 11.2 captures the mean level of arsenic in DC public school water fountains.
+
 2. **Hypothesis testing**: calculate probability of observing your sample given some assumption about the population
+
+> I reject the hypothesis that DC public school fountains have a "safe" level of arsenic. The probability of observing a mean contamination of 10.8 from a "safe" population is 0.004. 
 
 
 ---
@@ -68,13 +75,13 @@ class: inverse, middle
 > population from which it was drawn?  
   
 
-- **Population**: entire group of units study aims to learn about
+- **Population**: entire 'world' of units the study aims to learn about
 
-- **Parameter**: true characteristics of the population, e.g., $\mu_Y$
+- **Parameter**: characteristics of the population, e.g., $\mu_y$
 
-- **Sample**: "slice" of data from the population
+- **Sample**: 'slice' of data from the population
 
-- **Sample statistic**: charactersitic of the sampled units, e.g., $\bar{Y}$
+- **Sample statistic**: characteristic of sampled units, e.g., $\bar{y}$
 
 - **Estimation**: sample stat as guide to pop parameter.
 
@@ -87,9 +94,9 @@ class: inverse, middle
 
 Variability in sample statistics
 
-- Different across samples: $\bar{Y}_1 \neq \bar{Y}_2$
+- Different across samples: $\bar{y}_1 \neq \bar{y}_2$
 
-- Different from target parameter: $\bar{Y}_1 \neq \mu$
+- Different from target parameter: $\bar{y}_1 \neq \mu_y$
 
 
 ---
@@ -100,12 +107,12 @@ Consider the DCPS math proficiency, 2017
 .pull-left[
 Population parameters
 - Pop size (N) = 108  
-- $\mu$ = `r round(mean(dcps$ProfMath),1)`  
+- $\mu_y$ = `r round(mean(dcps$ProfMath),1)`  
 
 ]
 
 .pull-right[
-```{r pop, fig.width=3.5, fig.height=4, dpi=200}
+```{r pop, fig.width=3.5, fig.height=3, dpi=200}
   hist(dcps$ProfMath,
        main = "Math Proficiency, DCPS 2017",
        xlab = "% testing at grade level", 
@@ -125,9 +132,9 @@ s2 = pull(dcps, ProfMath) %>% sample(size = 25)
 
 .pull-left[
 ### Random Sample 1 (n = 25)
-- $\bar{Y}_1$ = `r round(mean(s1),1)`
+- $\bar{y}_1$ = `r round(mean(s1),1)`
 
-```{r s1, fig.width=3.5, fig.height=4, dpi=200}
+```{r s1, fig.width=3.5, fig.height=3, dpi=200}
   hist(s1,
        main = "Sample 1",
        xlab = "% testing at grade level", 
@@ -139,9 +146,9 @@ s2 = pull(dcps, ProfMath) %>% sample(size = 25)
 
 .pull-right[
 ### Random Sample 2 (n = 25)
-- $\bar{Y}_2$ = `r round(mean(s2),1)`
+- $\bar{y}_2$ = `r round(mean(s2),1)`
 
-```{r s2, fig.width=3.5, fig.height=4, dpi=200}
+```{r s2, fig.width=3.5, fig.height=3, dpi=200}
   hist(s2,
        main = "Sample 2",
        xlab = "% testing at grade level", 
@@ -215,17 +222,20 @@ class: inverse, middle
 ---
 # CLT and the Sampling Distribution
 
-> Sampling variability highlights the uncertainty of inference: we don't know if our sample stat is close to the target parameter.
-> But...
-> the Central Limit Theorem proves that the sampling distribution of a mean...
+>Sampling variability highlights the uncertainty of inference: we don't know if our sample stat is close to the target parameter.   
+>But...   
+>the Central Limit Theorem proves that:  
+>
+$$
+\bar{y} \sim N(\mu_y,\sigma) 
+$$
 
+Meaning that the sampling distribution of sample means
 
-- Normal distribution
-
-- Mean = $\mu$
-
-- Standard error $\sigma_{\bar{Y}} = s_Y / \sqrt{n}$
-
+- Follows a normal distribution 
+- Mean = $\mu_y$
+- Standard error $\sigma_{\bar{y}} = s_y / \sqrt{n}$
+  
 
 ---
 # So what, CLT?
@@ -249,9 +259,9 @@ class: inverse, middle
 
 **68-95-99 rule**
 
-- 68% of sample means within 1 SE of $\mu$
-- *95% within 2 SEs*
-- 99.7% within 3 SEs
+- 68% of sample means within $\sim1$ SE of $\mu$
+- *95% within $\sim2$ SEs*
+- 99.7% within $\sim3$ SEs
 
 ```{r sclt2, fig.width=4, fig.height=3, dpi=350}
   hist(l,
@@ -275,17 +285,19 @@ class: inverse, middle
 
 ---
 # Building a confidence interval
-
-> Your sample mean is w/i 2 SEs of the true population mean.
-> The chance I'm wrong? Only 5%.
-
+  
+  
 $$
-\bar{Y} \pm (2*\sigma_{\bar{Y}})
+CI = \bar{y} \pm (1.96*\sigma_{\bar{y}})
 $$
+  
+> Your sample mean is w/i about 1.96 SEs of the true population mean.
+> The chance I'm wrong? Only 5%.  
 
-- Sample stat: sample mean, $\bar{Y}$, or proportion, $\hat{p}$  
+- Sample stat: sample mean, $\bar{y}$, or proportion, $\hat{p}$  
 
-- Margin of error: $2 * \sigma_{\bar{Y}}$ 
+- Margin of error: $1.96 * \sigma_{\bar{y}}$ 
+
 
 
 ---
@@ -293,7 +305,7 @@ $$
 
 - SE, Sample mean
 $$
-\sigma_{\bar{Y}} = \frac{s_Y}{\sqrt{n}}
+\sigma_{\bar{y}} = \frac{s_y}{\sqrt{n}}
 $$
 
 - SE, Sample proportion  
@@ -301,10 +313,10 @@ $$
 \sigma_{\hat{p}} = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 $$
   
-- Critical statistic (approximations)
-  - 68% confidence: 1
-  - 95% confidence: 2
-  - 99.7% confidence: 3
+- Critical statistic $(Z,t)$
+  - 68% confidence: 
+  - 95% confidence: 
+  - 99.7% confidence: 
   
 
 ---
@@ -326,18 +338,18 @@ Pulling it all together
 .pull-left[
 - *What we know:*
   - n = 3,273
-  - $\bar{Y}=0.66$
-  - $s_Y = 0.24$
+  - $\bar{y}=0.66$
+  - $s_y = 0.24$
 
 ]
 
 --
 
 .pull-right[
-- *What we need:* $\bar{Y} \pm (2*\sigma_{\bar{Y}})$
-  - Standard error, $\sigma_{\bar{Y}}=s_Y/\sqrt{n}$ 
-  - Margin of error $2*\sigma_{\bar{Y}}$
-  - Interval $\bar{Y} \pm ME$
+- *What we need:* $\bar{y} \pm (1.96*\sigma_{\bar{y}})$
+  - Standard error, $\sigma_{\bar{y}}=s_y/\sqrt{n}$ 
+  - Margin of error, $ME=1.96*\sigma_{\bar{y}}$
+  - Interval $\bar{y} \pm ME$
 ]
   
 ---
@@ -364,14 +376,14 @@ class: inverse, middle
 
 ### (Null) hypothesis testing
 
-> Process of calculating the probability of your sample data given some hypothesis about the population.
+> Calculating the probability of your sample data given a hypothesis about the population.  
 > That probability is the basis for rejecting or not rejecting that hypothesis.
 
 Procedure:
 - Specify hypotheses
   - Null hypothesis: status quo expectation
   - Alternative: your expectation
-- Calculate $Pr(data|H_0)$; e.g., $Pr(\bar{Y} \geq 7.2 | \mu_Y = 0)$
+- Calculate $Pr(data|H_0)$; e.g., $Pr(\bar{y} \geq 7.2 | \mu_y = 0)$
 
 
 
@@ -420,10 +432,10 @@ $$
 ```{r scltht, fig.width=4, fig.height=3, dpi=350}
   hist(l,
        main = "Hypothesized sampling distribution",
-       xlab = "Sample means", 
+       xlab = "Sample mean", 
        col="#69b3a2")
   abline(v = mean(l), col = 'red')
-  abline(v = mean(l)+0.8*sd(l), col = 'blue',lt7=3)
+  abline(v = mean(l)+0.8*sd(l), col = 'orange',lt=3)
   abline(v = mean(l)+2.5*sd(l), col = 'blue')
   
 ```
@@ -437,24 +449,13 @@ $$
 >
 > Evaluate the null hypothesis that the population is racially neutral or liberal on this scale.
 
-```{r filt}
 
-df = df %>% filter(raceeth.selfid==1)
 
-```
-
---
-
-```{r ttest, echo=TRUE}
-
-t.test(df$resent.index, mu = 0.5, alternative = 'greater')
-
-```
 
 ---
 # Present your hypothesis test
 
-> The mean resentment index score among white, non-Hispanic respondents in the 2012 ANES equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population $(t = 38.3$, $p < 0.001)$ and we conclude that the population mean is significantly more conservative than the neutral point on this scale. 
+> The mean resentment index score among white, non-Hispanic respondents in the 2012 ANES equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population $(t = xx$, $p = xx)$ and we conclude that the population mean is significantly more conservative than the neutral point on this scale. 
 >
 
 ---
@@ -468,4 +469,4 @@ class: inverse
   - pad your estimate by the margin of error
   
 - Test specific hypotheses about the population
-  - find probability of your sample given status quo null
+  - find probability of your sample given status quo expectation (null)

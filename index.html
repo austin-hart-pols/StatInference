@@ -35,7 +35,7 @@ class: center, middle, inverse, title-slide
 
 
 
-# 2 flavors of inference
+# 3 flavors of inference
 
 
 - **CAUSAL** inference  
@@ -43,8 +43,12 @@ class: center, middle, inverse, title-slide
   - Inference b/c of FPCI  
   
 - **STATISTICAL** inference  
-  - Educated guess about population given sample
+  - Educated guess about "population" given sample
   - Inference b/c population parameter unseen/unknowable
+  
+- **EXTERNAL VALIDITY** inference
+  - Educated guess about generalizability of findings
+  - Considers other units, treatments, outcomes, settings, etc
 
 
 ---
@@ -52,7 +56,11 @@ class: center, middle, inverse, title-slide
 
 1. **Confidence intervals**: add "margin of error" to construct a range of plausibility around your estimate. 
 
+&gt; I am 95% confidence that the range 10.4 to 11.2 captures the mean level of arsenic in DC public school water fountains.
+
 2. **Hypothesis testing**: calculate probability of observing your sample given some assumption about the population
+
+&gt; I reject the hypothesis that DC public school fountains have a "safe" level of arsenic. The probability of observing a mean contamination of 10.8 from a "safe" population is 0.004. 
 
 
 ---
@@ -70,13 +78,13 @@ class: inverse, middle
 &gt; population from which it was drawn?  
   
 
-- **Population**: entire group of units study aims to learn about
+- **Population**: entire 'world' of units the study aims to learn about
 
-- **Parameter**: true characteristics of the population, e.g., `\(\mu_Y\)`
+- **Parameter**: characteristics of the population, e.g., `\(\mu_y\)`
 
-- **Sample**: "slice" of data from the population
+- **Sample**: 'slice' of data from the population
 
-- **Sample statistic**: charactersitic of the sampled units, e.g., `\(\bar{Y}\)`
+- **Sample statistic**: characteristic of sampled units, e.g., `\(\bar{y}\)`
 
 - **Estimation**: sample stat as guide to pop parameter.
 
@@ -89,9 +97,9 @@ class: inverse, middle
 
 Variability in sample statistics
 
-- Different across samples: `\(\bar{Y}_1 \neq \bar{Y}_2\)`
+- Different across samples: `\(\bar{y}_1 \neq \bar{y}_2\)`
 
-- Different from target parameter: `\(\bar{Y}_1 \neq \mu\)`
+- Different from target parameter: `\(\bar{y}_1 \neq \mu_y\)`
 
 
 ---
@@ -102,7 +110,7 @@ Consider the DCPS math proficiency, 2017
 .pull-left[
 Population parameters
 - Pop size (N) = 108  
-- `\(\mu\)` = 27  
+- `\(\mu_y\)` = 27  
 
 ]
 
@@ -118,7 +126,7 @@ Population parameters
 
 .pull-left[
 ### Random Sample 1 (n = 25)
-- `\(\bar{Y}_1\)` = 22.3
+- `\(\bar{y}_1\)` = 30.1
 
 &lt;img src="StatInference_files/figure-html/s1-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -126,7 +134,7 @@ Population parameters
 
 .pull-right[
 ### Random Sample 2 (n = 25)
-- `\(\bar{Y}_2\)` = 28.6
+- `\(\bar{y}_2\)` = 17.1
 
 &lt;img src="StatInference_files/figure-html/s2-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -167,7 +175,7 @@ class: inverse, middle
 Our sampling dist  
 - Mean: 27
 - Median: 26.9
-- Range: 12.6 to 44.4
+- Range: 13.1 to 44.7
 - SD/SE: 4.2  
 ]
 
@@ -181,17 +189,20 @@ class: inverse, middle
 ---
 # CLT and the Sampling Distribution
 
-&gt; Sampling variability highlights the uncertainty of inference: we don't know if our sample stat is close to the target parameter.
-&gt; But...
-&gt; the Central Limit Theorem proves that the sampling distribution of a mean...
+&gt;Sampling variability highlights the uncertainty of inference: we don't know if our sample stat is close to the target parameter.   
+&gt;But...   
+&gt;the Central Limit Theorem proves that:  
+&gt;
+$$
+\bar{y} \sim N(\mu_y,\sigma) 
+$$
 
+Meaning that the sampling distribution of sample means
 
-- Normal distribution
-
-- Mean = `\(\mu\)`
-
-- Standard error `\(\sigma_{\bar{Y}} = s_Y / \sqrt{n}\)`
-
+- Follows a normal distribution 
+- Mean = `\(\mu_y\)`
+- Standard error `\(\sigma_{\bar{y}} = s_y / \sqrt{n}\)`
+  
 
 ---
 # So what, CLT?
@@ -208,9 +219,9 @@ class: inverse, middle
 
 **68-95-99 rule**
 
-- 68% of sample means within 1 SE of `\(\mu\)`
-- *95% within 2 SEs*
-- 99.7% within 3 SEs
+- 68% of sample means within `\(\sim1\)` SE of `\(\mu\)`
+- *95% within `\(\sim2\)` SEs*
+- 99.7% within `\(\sim3\)` SEs
 
 &lt;img src="StatInference_files/figure-html/sclt2-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -225,17 +236,19 @@ class: inverse, middle
 
 ---
 # Building a confidence interval
-
-&gt; Your sample mean is w/i 2 SEs of the true population mean.
-&gt; The chance I'm wrong? Only 5%.
-
+  
+  
 $$
-\bar{Y} \pm (2*\sigma_{\bar{Y}})
+CI = \bar{y} \pm (1.96*\sigma_{\bar{y}})
 $$
+  
+&gt; Your sample mean is w/i about 1.96 SEs of the true population mean.
+&gt; The chance I'm wrong? Only 5%.  
 
-- Sample stat: sample mean, `\(\bar{Y}\)`, or proportion, `\(\hat{p}\)`  
+- Sample stat: sample mean, `\(\bar{y}\)`, or proportion, `\(\hat{p}\)`  
 
-- Margin of error: `\(2 * \sigma_{\bar{Y}}\)` 
+- Margin of error: `\(1.96 * \sigma_{\bar{y}}\)` 
+
 
 
 ---
@@ -243,7 +256,7 @@ $$
 
 - SE, Sample mean
 $$
-\sigma_{\bar{Y}} = \frac{s_Y}{\sqrt{n}}
+\sigma_{\bar{y}} = \frac{s_y}{\sqrt{n}}
 $$
 
 - SE, Sample proportion  
@@ -251,10 +264,10 @@ $$
 \sigma_{\hat{p}} = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
 $$
   
-- Critical statistic (approximations)
-  - 68% confidence: 1
-  - 95% confidence: 2
-  - 99.7% confidence: 3
+- Critical statistic `\((Z,t)\)`
+  - 68% confidence: 
+  - 95% confidence: 
+  - 99.7% confidence: 
   
 
 ---
@@ -276,18 +289,18 @@ Pulling it all together
 .pull-left[
 - *What we know:*
   - n = 3,273
-  - `\(\bar{Y}=0.66\)`
-  - `\(s_Y = 0.24\)`
+  - `\(\bar{y}=0.66\)`
+  - `\(s_y = 0.24\)`
 
 ]
 
 --
 
 .pull-right[
-- *What we need:* `\(\bar{Y} \pm (2*\sigma_{\bar{Y}})\)`
-  - Standard error, `\(\sigma_{\bar{Y}}=s_Y/\sqrt{n}\)` 
-  - Margin of error `\(2*\sigma_{\bar{Y}}\)`
-  - Interval `\(\bar{Y} \pm ME\)`
+- *What we need:* `\(\bar{y} \pm (1.96*\sigma_{\bar{y}})\)`
+  - Standard error, `\(\sigma_{\bar{y}}=s_y/\sqrt{n}\)` 
+  - Margin of error, `\(ME=1.96*\sigma_{\bar{y}}\)`
+  - Interval `\(\bar{y} \pm ME\)`
 ]
   
 ---
@@ -314,14 +327,14 @@ class: inverse, middle
 
 ### (Null) hypothesis testing
 
-&gt; Process of calculating the probability of your sample data given some hypothesis about the population.
+&gt; Calculating the probability of your sample data given a hypothesis about the population.  
 &gt; That probability is the basis for rejecting or not rejecting that hypothesis.
 
 Procedure:
 - Specify hypotheses
   - Null hypothesis: status quo expectation
   - Alternative: your expectation
-- Calculate `\(Pr(data|H_0)\)`; e.g., `\(Pr(\bar{Y} \geq 7.2 | \mu_Y = 0)\)`
+- Calculate `\(Pr(data|H_0)\)`; e.g., `\(Pr(\bar{y} \geq 7.2 | \mu_y = 0)\)`
 
 
 
@@ -380,31 +393,11 @@ $$
 
 
 
---
-
-
-```r
-t.test(df$resent.index, mu = 0.5, alternative = 'greater')
-```
-
-```
-## 
-## 	One Sample t-test
-## 
-## data:  df$resent.index
-## t = 38.28, df = 3272, p-value &lt; 2.2e-16
-## alternative hypothesis: true mean is greater than 0.5
-## 95 percent confidence interval:
-##  0.6524978       Inf
-## sample estimates:
-## mean of x 
-## 0.6593467
-```
 
 ---
 # Present your hypothesis test
 
-&gt; The mean resentment index score among white, non-Hispanic respondents in the 2012 ANES equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population `\((t = 38.3\)`, `\(p &lt; 0.001)\)` and we conclude that the population mean is significantly more conservative than the neutral point on this scale. 
+&gt; The mean resentment index score among white, non-Hispanic respondents in the 2012 ANES equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population `\((t = xx\)`, `\(p = xx)\)` and we conclude that the population mean is significantly more conservative than the neutral point on this scale. 
 &gt;
 
 ---
@@ -418,7 +411,7 @@ class: inverse
   - pad your estimate by the margin of error
   
 - Test specific hypotheses about the population
-  - find probability of your sample given status quo null
+  - find probability of your sample given status quo expectation (null)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
