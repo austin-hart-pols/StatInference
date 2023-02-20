@@ -54,11 +54,11 @@ class: center, middle, inverse, title-slide
 ---
 # Statistical Inference, 2 ways
 
-1. **Confidence intervals**: add "margin of error" to construct a range of plausibility around your estimate. 
+- **Confidence intervals**: add "margin of error" to construct a range of plausibility around your estimate. 
 
 &gt; I am 95% confidence that the range 10.4 to 11.2 captures the mean level of arsenic in DC public school water fountains.
 
-2. **Hypothesis testing**: calculate probability of observing your sample given some assumption about the population
+- **Hypothesis testing**: calculate probability of observing your sample given some assumption about the population
 
 &gt; I reject the hypothesis that DC public school fountains have a "safe" level of arsenic. The probability of observing a mean contamination of 10.8 from a "safe" population is 0.004. 
 
@@ -126,7 +126,7 @@ Population parameters
 
 .pull-left[
 ### Random Sample 1 (n = 25)
-- `\(\bar{y}_1\)` = 30.1
+- `\(\bar{y}_1\)` = 34.3
 
 &lt;img src="StatInference_files/figure-html/s1-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -134,7 +134,7 @@ Population parameters
 
 .pull-right[
 ### Random Sample 2 (n = 25)
-- `\(\bar{y}_2\)` = 17.1
+- `\(\bar{y}_2\)` = 25.3
 
 &lt;img src="StatInference_files/figure-html/s2-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -173,10 +173,10 @@ class: inverse, middle
 
 .pull-right[  
 Our sampling dist  
-- Mean: 27
+- Mean: 26.9
 - Median: 26.9
-- Range: 13.1 to 44.7
-- SD/SE: 4.2  
+- Range: 12.4 to 44
+- SD/SE: 4.1  
 ]
 
 
@@ -209,9 +209,9 @@ Meaning that the sampling distribution of sample means
 
 &lt;img src="StatInference_files/figure-html/sclt-1.svg" style="display: block; margin: auto;" /&gt;
 
-- Population mean = 27; Sampling mean = 27
-- SE = 4.2
-- % sample means within 2 SEs: 95.6
+- Population mean = 27; Sampling mean = 26.9
+- SE = 4.1
+- % sample means within 1.96 SEs: 95
 
 
 ---
@@ -307,7 +307,7 @@ Pulling it all together
 # Reporting your CI
 
 &gt; The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-&gt; The mean resentment index score is 0.66, w/a standard deviation of 0.24.
+&gt; The mean resentment index score is 0.660, w/a standard deviation of 0.024.
 &gt;
 &gt; Calculate and interpret a 95% confidence interval.
 
@@ -384,10 +384,10 @@ $$
 
 
 ---
-# Your own CI
+# Your own hypothesis test
 
 &gt; The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-&gt; The mean resentment index score is 0.66.
+&gt; The mean resentment index score is 0.660, and the standard deviation is 0.024.
 &gt;
 &gt; Evaluate the null hypothesis that the population is racially neutral or liberal on this scale.
 
@@ -418,7 +418,8 @@ class: inverse
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
 "highlightLines": true,
-"countIncrementalSlides": false
+"countIncrementalSlides": false,
+"ratio": "16:9"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

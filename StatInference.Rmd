@@ -11,6 +11,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      ratio: "16:9"
 ---
 
 
@@ -51,11 +52,11 @@ load('anes2012 workshop.RData')
 ---
 # Statistical Inference, 2 ways
 
-1. **Confidence intervals**: add "margin of error" to construct a range of plausibility around your estimate. 
+- **Confidence intervals**: add "margin of error" to construct a range of plausibility around your estimate. 
 
 > I am 95% confidence that the range 10.4 to 11.2 captures the mean level of arsenic in DC public school water fountains.
 
-2. **Hypothesis testing**: calculate probability of observing your sample given some assumption about the population
+- **Hypothesis testing**: calculate probability of observing your sample given some assumption about the population
 
 > I reject the hypothesis that DC public school fountains have a "safe" level of arsenic. The probability of observing a mean contamination of 10.8 from a "safe" population is 0.004. 
 
@@ -251,7 +252,7 @@ Meaning that the sampling distribution of sample means
 
 - Population mean = 27; Sampling mean = `r round(mean(l),1)`
 - SE = `r round(sd(l),1)`
-- % sample means within 2 SEs: `r round(sum(!is.na(l[l>27-2*sd(l) & l < 27+2*sd(l)]))/200,1)`
+- % sample means within 1.96 SEs: `r round(sum(!is.na(l[l>27-1.96*sd(l) & l < 27+1.96*sd(l)]))/200,1)`
 
 
 ---
@@ -356,7 +357,7 @@ Pulling it all together
 # Reporting your CI
 
 > The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-> The mean resentment index score is 0.66, w/a standard deviation of 0.24.
+> The mean resentment index score is 0.660, w/a standard deviation of 0.024.
 >
 > Calculate and interpret a 95% confidence interval.
 
@@ -442,10 +443,10 @@ $$
 
 
 ---
-# Your own CI
+# Your own hypothesis test
 
 > The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-> The mean resentment index score is 0.66.
+> The mean resentment index score is 0.660, and the standard deviation is 0.024.
 >
 > Evaluate the null hypothesis that the population is racially neutral or liberal on this scale.
 
