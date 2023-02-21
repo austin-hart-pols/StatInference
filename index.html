@@ -79,12 +79,10 @@ class: inverse, middle
   
 
 - **Population**: entire 'world' of units the study aims to learn about
-
-- **Parameter**: characteristics of the population, e.g., `\(\mu_y\)`
+  - *Parameter*: characteristics of the population, e.g., `\(\mu_y\)`  
 
 - **Sample**: 'slice' of data from the population
-
-- **Sample statistic**: characteristic of sampled units, e.g., `\(\bar{y}\)`
+  - *Sample statistic*: characteristic of sampled units, e.g., `\(\bar{y}\)`  
 
 - **Estimation**: sample stat as guide to pop parameter.
 
@@ -97,7 +95,7 @@ class: inverse, middle
 
 Variability in sample statistics
 
-- Different across samples: `\(\bar{y}_1 \neq \bar{y}_2\)`
+- Different across samples: `\(\bar{y}_1 \neq \bar{y}_2\)`  
 
 - Different from target parameter: `\(\bar{y}_1 \neq \mu_y\)`
 
@@ -126,7 +124,7 @@ Population parameters
 
 .pull-left[
 ### Random Sample 1 (n = 25)
-- `\(\bar{y}_1\)` = 34.3
+- `\(\bar{y}_1\)` = 29.8
 
 &lt;img src="StatInference_files/figure-html/s1-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -134,7 +132,7 @@ Population parameters
 
 .pull-right[
 ### Random Sample 2 (n = 25)
-- `\(\bar{y}_2\)` = 25.3
+- `\(\bar{y}_2\)` = 21.9
 
 &lt;img src="StatInference_files/figure-html/s2-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -144,7 +142,7 @@ Population parameters
 ---
 class: inverse, middle
 
-# SAMLING DISTRIBUTION
+# SAMPLING DISTRIBUTION
 
 ### The first step to inference
 
@@ -152,9 +150,15 @@ class: inverse, middle
 ---
 # ALL the sample statistics
 
-- Select a random sample, size 25.
-- Calculate the mean math proficiency.
-- Repeat 20,000 times.
+&gt; What if we had access to thousands of samples?
+
+
+- Select a random sample, size 25.  
+
+- Calculate the mean math proficiency.  
+
+- Repeat 10,000 times.  
+
 - Plot the results.
 
 
@@ -173,9 +177,9 @@ class: inverse, middle
 
 .pull-right[  
 Our sampling dist  
-- Mean: 26.9
-- Median: 26.9
-- Range: 12.4 to 44
+- Mean: 27
+- Median: 27
+- Range: 14.1 to 44.3
 - SD/SE: 4.1  
 ]
 
@@ -189,17 +193,14 @@ class: inverse, middle
 ---
 # CLT and the Sampling Distribution
 
-&gt;Sampling variability highlights the uncertainty of inference: we don't know if our sample stat is close to the target parameter.   
-&gt;But...   
-&gt;the Central Limit Theorem proves that:  
-&gt;
+&gt; We don't know if our one sample mean is close to the true population mean.   
+&gt; But...   
+&gt; the Central Limit Theorem proves that sample means:   
 $$
 \bar{y} \sim N(\mu_y,\sigma) 
 $$
 
-Meaning that the sampling distribution of sample means
-
-- Follows a normal distribution 
+- Follow a normal distribution 
 - Mean = `\(\mu_y\)`
 - Standard error `\(\sigma_{\bar{y}} = s_y / \sqrt{n}\)`
   
@@ -209,9 +210,9 @@ Meaning that the sampling distribution of sample means
 
 &lt;img src="StatInference_files/figure-html/sclt-1.svg" style="display: block; margin: auto;" /&gt;
 
-- Population mean = 27; Sampling mean = 26.9
+- Population mean = 27; Sampling mean = 27
 - SE = 4.1
-- % sample means within 1.96 SEs: 95
+- % sample means within 1.96 SEs: 95.2
 
 
 ---
@@ -235,40 +236,25 @@ class: inverse, middle
 
 
 ---
-# Building a confidence interval
+# Building a 95% confidence interval
   
   
 $$
 CI = \bar{y} \pm (1.96*\sigma_{\bar{y}})
 $$
   
-&gt; Your sample mean is w/i about 1.96 SEs of the true population mean.
+&gt; Your sample mean is w/i 1.96 SEs of the true population mean.
 &gt; The chance I'm wrong? Only 5%.  
 
-- Sample stat: sample mean, `\(\bar{y}\)`, or proportion, `\(\hat{p}\)`  
+- Sample stat: sample mean, `\(\bar{y}\)`
 
 - Margin of error: `\(1.96 * \sigma_{\bar{y}}\)` 
 
-
-
----
-# Knowing your margin of error
-
-- SE, Sample mean
+- Standard error, sample mean
 $$
 \sigma_{\bar{y}} = \frac{s_y}{\sqrt{n}}
 $$
 
-- SE, Sample proportion  
-$$
-\sigma_{\hat{p}} = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
-$$
-  
-- Critical statistic `\((Z,t)\)`
-  - 68% confidence: 
-  - 95% confidence: 
-  - 99.7% confidence: 
-  
 
 ---
 class: inverse, middle
@@ -280,7 +266,7 @@ Pulling it all together
 # Your own CI
 
 &gt; The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-&gt; The mean resentment index score is 0.66, w/a standard deviation of 0.24.
+&gt; The mean resentment index score is 0.66, w/a standard deviation of 0.024.
 &gt;
 &gt; Calculate and interpret a 95% confidence interval.
 
@@ -288,16 +274,16 @@ Pulling it all together
 
 .pull-left[
 - *What we know:*
-  - n = 3,273
+  - `\(n = 3,273\)`
   - `\(\bar{y}=0.66\)`
-  - `\(s_y = 0.24\)`
+  - `\(s_y = 0.024\)`
 
 ]
 
 --
 
 .pull-right[
-- *What we need:* `\(\bar{y} \pm (1.96*\sigma_{\bar{y}})\)`
+- *What we need:* 
   - Standard error, `\(\sigma_{\bar{y}}=s_y/\sqrt{n}\)` 
   - Margin of error, `\(ME=1.96*\sigma_{\bar{y}}\)`
   - Interval `\(\bar{y} \pm ME\)`
@@ -325,27 +311,31 @@ class: inverse, middle
 ---
 # Logic of hypothesis testing
 
-### (Null) hypothesis testing
-
-&gt; Calculating the probability of your sample data given a hypothesis about the population.  
-&gt; That probability is the basis for rejecting or not rejecting that hypothesis.
+&gt; Given a hypothesis about a population parameter, calculate the probability of finding your sample statistic.  
+&gt; Reject the hypothesis when probability is exceptionally low, typically below 0.05. 
 
 Procedure:
-- Specify hypotheses
+1. Specify hypotheses
   - Null hypothesis: status quo expectation
-  - Alternative: your expectation
-- Calculate `\(Pr(data|H_0)\)`; e.g., `\(Pr(\bar{y} \geq 7.2 | \mu_y = 0)\)`
+  - Alternative: your expectation  
+  
+2. Select appropriate test statistic  
 
+3. Specify decision rule for rejecting null  
+
+4. Compute test statistic  
+
+5. Conclude
 
 
 ---
 # Setting up hypotheses
 
-- Alternative hypothesis, `\(H_A\)`
-  - *Your* expectation of the population/truth
+- **Alternative hypothesis,** `\(H_A\)`
+  - Your expectation of the population/truth
   - Empirical implication of your theory
 
-- Null hypothesis, `\(H_0\)`
+- **Null hypothesis,** `\(H_0\)`
   - Pure logical opposite of `\(H_A\)`
   - Status quo expectation: you've found nothing new
 
@@ -355,32 +345,56 @@ Procedure:
   
   
 ---
-# To reject or not to reject?
+# Select the right test statistic
 
-&gt; On what grounds can I reject the null hypothesis?
+&gt; A test statistic is a number that standardizes your sample information in light of the null hypothesis.  
+&gt; It expresses the deviation of the sample mean from the hypothesized parameter as a number of standard errors.
 
-- Default position: status quo wins
-  - fail to reject the null
-  - Stick with conventional wisdom
-  
-- Reject the null
-  - *iff* sample stat is totally implausible given `\(H_0\)`
-  - typically `\(p \leq 0.05\)`
+
+For a sample mean, you might compute the `\(Z\)`-statistic:
+
+$$
+Z = \frac{\bar{y}-\mu_0}{s_y/\sqrt{n}}
+$$
+
 
 
 ---
-# The meaning of a p-value
+# To reject or not to reject?
 
-&gt; If the conventional wisdom is true, what share of samples reveal a stat or association like yours? 
-
-
-$$
-p = Pr(Sample~Stat | H_0)
-$$
+### Set a decision rule for rejecting the null  
 
 
+- Choose a level of significance, typically `\(\alpha = 0.05\)`  
 
-&lt;img src="StatInference_files/figure-html/scltht-1.svg" style="display: block; margin: auto;" /&gt;
+- Find the critical value, `\(Z^*\)`  
+  
+- Reject null if test statistic larger than critical value
+
+
+---
+# Finding your critical value, 95% significance
+
+.pull-left[
+### Upper-tailed test
+
+Null can only be wrong in one direction.
+
+&gt; Reject `\(H_0\)` if `\(Z &gt; 1.645\)`
+
+&lt;img src="StatInference_files/figure-html/sclt1s-1.svg" style="display: block; margin: auto;" /&gt;
+
+]
+.pull-right[
+### Two-tailed test
+
+Null can be wrong in either direction.
+
+&gt; Reject `\(H_0\)` if `\(\lvert Z \rvert &gt; 1.96\)`
+
+
+&lt;img src="StatInference_files/figure-html/sclt2s-1.svg" style="display: block; margin: auto;" /&gt;
+]
 
 
 ---
@@ -397,7 +411,7 @@ $$
 ---
 # Present your hypothesis test
 
-&gt; The mean resentment index score among white, non-Hispanic respondents in the 2012 ANES equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population `\((t = xx\)`, `\(p = xx)\)` and we conclude that the population mean is significantly more conservative than the neutral point on this scale. 
+&gt; The mean resentment index score equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population `\((Z = xx)\)` and we conclude that the population mean is significantly more conservative on this scale. 
 &gt;
 
 ---
@@ -411,7 +425,7 @@ class: inverse
   - pad your estimate by the margin of error
   
 - Test specific hypotheses about the population
-  - find probability of your sample given status quo expectation (null)
+  - reject (null) hypotheses that are unlikely to have produced your data 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

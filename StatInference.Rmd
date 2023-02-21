@@ -24,12 +24,11 @@ knitr::opts_chunk$set(
 ```
 
 ```{r results='hide'}
+
 library(tidyverse)
-library(magrittr)
-library(kableExtra)
 
 load('DCPS testing.RData')
-load('anes2012 workshop.RData')
+
 ```
 
 
@@ -77,12 +76,10 @@ class: inverse, middle
   
 
 - **Population**: entire 'world' of units the study aims to learn about
-
-- **Parameter**: characteristics of the population, e.g., $\mu_y$
+  - *Parameter*: characteristics of the population, e.g., $\mu_y$  
 
 - **Sample**: 'slice' of data from the population
-
-- **Sample statistic**: characteristic of sampled units, e.g., $\bar{y}$
+  - *Sample statistic*: characteristic of sampled units, e.g., $\bar{y}$  
 
 - **Estimation**: sample stat as guide to pop parameter.
 
@@ -95,7 +92,7 @@ class: inverse, middle
 
 Variability in sample statistics
 
-- Different across samples: $\bar{y}_1 \neq \bar{y}_2$
+- Different across samples: $\bar{y}_1 \neq \bar{y}_2$  
 
 - Different from target parameter: $\bar{y}_1 \neq \mu_y$
 
@@ -113,7 +110,7 @@ Population parameters
 ]
 
 .pull-right[
-```{r pop, fig.width=3.5, fig.height=3, dpi=200}
+```{r pop, fig.width=4, fig.height=3, dpi=200}
   hist(dcps$ProfMath,
        main = "Math Proficiency, DCPS 2017",
        xlab = "% testing at grade level", 
@@ -135,11 +132,12 @@ s2 = pull(dcps, ProfMath) %>% sample(size = 25)
 ### Random Sample 1 (n = 25)
 - $\bar{y}_1$ = `r round(mean(s1),1)`
 
-```{r s1, fig.width=3.5, fig.height=3, dpi=200}
+```{r s1, fig.width=4, fig.height=3, dpi=200}
   hist(s1,
        main = "Sample 1",
        xlab = "% testing at grade level", 
-       xlim = c(0,100), col="#69b3a2")
+       xlim = c(0,100), col="#69b3a2",
+       ylim = c(0,10))
   abline(v = mean(s1), col = 'red')
 ```
 
@@ -149,11 +147,12 @@ s2 = pull(dcps, ProfMath) %>% sample(size = 25)
 ### Random Sample 2 (n = 25)
 - $\bar{y}_2$ = `r round(mean(s2),1)`
 
-```{r s2, fig.width=3.5, fig.height=3, dpi=200}
+```{r s2, fig.width=4, fig.height=3, dpi=200}
   hist(s2,
        main = "Sample 2",
        xlab = "% testing at grade level", 
-       xlim = c(0,100), col="#69b3a2")
+       xlim = c(0,100), col="#69b3a2",
+       ylim = c(0,10))
   abline(v = mean(s2), col = 'red')
 ```
 
@@ -163,7 +162,7 @@ s2 = pull(dcps, ProfMath) %>% sample(size = 25)
 ---
 class: inverse, middle
 
-# SAMLING DISTRIBUTION
+# SAMPLING DISTRIBUTION
 
 ### The first step to inference
 
@@ -171,9 +170,15 @@ class: inverse, middle
 ---
 # ALL the sample statistics
 
-- Select a random sample, size 25.
-- Calculate the mean math proficiency.
-- Repeat 20,000 times.
+> What if we had access to thousands of samples?
+
+
+- Select a random sample, size 25.  
+
+- Calculate the mean math proficiency.  
+
+- Repeat 10,000 times.  
+
 - Plot the results.
 
 
@@ -186,7 +191,7 @@ class: inverse, middle
 ```{r draws}
 l = NULL
 
-for (i in 1:20000) {
+for (i in 1:10000) {
   l[i] = pull(dcps, ProfMath) %>% sample(size = 25) %>% mean()
 }
   
@@ -197,7 +202,7 @@ for (i in 1:20000) {
 ```{r sdist, fig.width=3.5, fig.height=3.5, dpi=200}
 
   hist(l,
-       main = "20,000 sample means",
+       main = "10,000 sample means",
        xlab = "Sample mean", 
        col="#69b3a2")
   abline(v = mean(l), col = 'red')
@@ -223,17 +228,14 @@ class: inverse, middle
 ---
 # CLT and the Sampling Distribution
 
->Sampling variability highlights the uncertainty of inference: we don't know if our sample stat is close to the target parameter.   
->But...   
->the Central Limit Theorem proves that:  
->
+> We don't know if our one sample mean is close to the true population mean.   
+> But...   
+> the Central Limit Theorem proves that sample means:   
 $$
 \bar{y} \sim N(\mu_y,\sigma) 
 $$
 
-Meaning that the sampling distribution of sample means
-
-- Follows a normal distribution 
+- Follow a normal distribution 
 - Mean = $\mu_y$
 - Standard error $\sigma_{\bar{y}} = s_y / \sqrt{n}$
   
@@ -248,11 +250,12 @@ Meaning that the sampling distribution of sample means
        col="#69b3a2")
   abline(v = mean(l), col = 'red')
   
+  
 ```
 
-- Population mean = 27; Sampling mean = `r round(mean(l),1)`
+- Population mean = `r round(mean(dcps$ProfMath),1)`; Sampling mean = `r round(mean(l),1)`
 - SE = `r round(sd(l),1)`
-- % sample means within 1.96 SEs: `r round(sum(!is.na(l[l>27-1.96*sd(l) & l < 27+1.96*sd(l)]))/200,1)`
+- % sample means within 1.96 SEs: `r round(sum(!is.na(l[l>27-1.96*sd(l) & l < 27+1.96*sd(l)]))/100,1)`
 
 
 ---
@@ -265,14 +268,17 @@ Meaning that the sampling distribution of sample means
 - 99.7% within $\sim3$ SEs
 
 ```{r sclt2, fig.width=4, fig.height=3, dpi=350}
-  hist(l,
-       main = "Sampling distribution",
-       xlab = "Sample mean", 
-       col="#69b3a2")
-  abline(v = mean(l), col = 'red')
-  abline(v = mean(l)-2*sd(l), col = 'blue')
-  abline(v = mean(l)+2*sd(l), col = 'blue')
-  
+  ggplot(NULL, aes(c(-3,3))) +
+    geom_area(stat = "function", fun = dnorm, fill = "#00998a", xlim = c(-1.96, 1.96)) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey80", xlim = c(1.96, 3.5)) +
+    geom_area(stat='function', fun = dnorm, fill = 'grey80', xlim = c(-3.5,-1.96)) +
+    labs(x = "Z", y = "") +
+    scale_y_continuous(breaks = NULL,
+                       expand = expansion(mult=c(0,0.05))) +
+    scale_x_continuous(breaks = c(-1.96,0,1.96)) +
+    coord_cartesian(xlim = c(-3,3)) +
+    theme_minimal() +
+    theme(panel.grid.minor = element_blank())
 ```
 
 
@@ -285,40 +291,25 @@ class: inverse, middle
 
 
 ---
-# Building a confidence interval
+# Building a 95% confidence interval
   
   
 $$
 CI = \bar{y} \pm (1.96*\sigma_{\bar{y}})
 $$
   
-> Your sample mean is w/i about 1.96 SEs of the true population mean.
+> Your sample mean is w/i 1.96 SEs of the true population mean.
 > The chance I'm wrong? Only 5%.  
 
-- Sample stat: sample mean, $\bar{y}$, or proportion, $\hat{p}$  
+- Sample stat: sample mean, $\bar{y}$
 
 - Margin of error: $1.96 * \sigma_{\bar{y}}$ 
 
-
-
----
-# Knowing your margin of error
-
-- SE, Sample mean
+- Standard error, sample mean
 $$
 \sigma_{\bar{y}} = \frac{s_y}{\sqrt{n}}
 $$
 
-- SE, Sample proportion  
-$$
-\sigma_{\hat{p}} = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
-$$
-  
-- Critical statistic $(Z,t)$
-  - 68% confidence: 
-  - 95% confidence: 
-  - 99.7% confidence: 
-  
 
 ---
 class: inverse, middle
@@ -330,7 +321,7 @@ Pulling it all together
 # Your own CI
 
 > The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-> The mean resentment index score is 0.66, w/a standard deviation of 0.24.
+> The mean resentment index score is 0.66, w/a standard deviation of 0.024.
 >
 > Calculate and interpret a 95% confidence interval.
 
@@ -338,16 +329,16 @@ Pulling it all together
 
 .pull-left[
 - *What we know:*
-  - n = 3,273
+  - $n = 3,273$
   - $\bar{y}=0.66$
-  - $s_y = 0.24$
+  - $s_y = 0.024$
 
 ]
 
 --
 
 .pull-right[
-- *What we need:* $\bar{y} \pm (1.96*\sigma_{\bar{y}})$
+- *What we need:* 
   - Standard error, $\sigma_{\bar{y}}=s_y/\sqrt{n}$ 
   - Margin of error, $ME=1.96*\sigma_{\bar{y}}$
   - Interval $\bar{y} \pm ME$
@@ -375,27 +366,31 @@ class: inverse, middle
 ---
 # Logic of hypothesis testing
 
-### (Null) hypothesis testing
-
-> Calculating the probability of your sample data given a hypothesis about the population.  
-> That probability is the basis for rejecting or not rejecting that hypothesis.
+> Given a hypothesis about a population parameter, calculate the probability of finding your sample statistic.  
+> Reject the hypothesis when probability is exceptionally low, typically below 0.05. 
 
 Procedure:
-- Specify hypotheses
+1. Specify hypotheses
   - Null hypothesis: status quo expectation
-  - Alternative: your expectation
-- Calculate $Pr(data|H_0)$; e.g., $Pr(\bar{y} \geq 7.2 | \mu_y = 0)$
+  - Alternative: your expectation  
+  
+2. Select appropriate test statistic  
 
+3. Specify decision rule for rejecting null  
+
+4. Compute test statistic  
+
+5. Conclude
 
 
 ---
 # Setting up hypotheses
 
-- Alternative hypothesis, $H_A$
-  - *Your* expectation of the population/truth
+- **Alternative hypothesis,** $H_A$
+  - Your expectation of the population/truth
   - Empirical implication of your theory
 
-- Null hypothesis, $H_0$
+- **Null hypothesis,** $H_0$
   - Pure logical opposite of $H_A$
   - Status quo expectation: you've found nothing new
 
@@ -405,41 +400,79 @@ Procedure:
   
   
 ---
-# To reject or not to reject?
+# Select the right test statistic
 
-> On what grounds can I reject the null hypothesis?
+> A test statistic is a number that standardizes your sample information in light of the null hypothesis.  
+> It expresses the deviation of the sample mean from the hypothesized parameter as a number of standard errors.
 
-- Default position: status quo wins
-  - fail to reject the null
-  - Stick with conventional wisdom
-  
-- Reject the null
-  - *iff* sample stat is totally implausible given $H_0$
-  - typically $p \leq 0.05$
+
+For a sample mean, you might compute the $Z$-statistic:
+
+$$
+Z = \frac{\bar{y}-\mu_0}{s_y/\sqrt{n}}
+$$
+
 
 
 ---
-# The meaning of a p-value
+# To reject or not to reject?
 
-> If the conventional wisdom is true, what share of samples reveal a stat or association like yours? 
-
-
-$$
-p = Pr(Sample~Stat | H_0)
-$$
+### Set a decision rule for rejecting the null  
 
 
+- Choose a level of significance, typically $\alpha = 0.05$  
 
-```{r scltht, fig.width=4, fig.height=3, dpi=350}
-  hist(l,
-       main = "Hypothesized sampling distribution",
-       xlab = "Sample mean", 
-       col="#69b3a2")
-  abline(v = mean(l), col = 'red')
-  abline(v = mean(l)+0.8*sd(l), col = 'orange',lt=3)
-  abline(v = mean(l)+2.5*sd(l), col = 'blue')
+- Find the critical value, $Z^*$  
   
+- Reject null if test statistic larger than critical value
+
+
+---
+# Finding your critical value, 95% significance
+
+.pull-left[
+### Upper-tailed test
+
+Null can only be wrong in one direction.
+
+> Reject $H_0$ if $Z > 1.645$
+
+```{r sclt1s, fig.width=3.5, fig.height=3, dpi=350}
+  ggplot(NULL, aes(c(-3.5,3.5))) +
+    geom_area(stat = "function", fun = dnorm, fill = "#00998a", xlim = c(-3, 1.645)) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey80", xlim = c(1.645, 3.5)) +
+    labs(x = "Z", y = "") +
+    scale_y_continuous(breaks = NULL,
+                       expand = expansion(mult=c(0,0.05))) +
+    scale_x_continuous(breaks = c(0,1.645)) +
+    coord_cartesian(xlim = c(-3.5,3.5)) +
+    theme_minimal() +
+    theme(panel.grid.minor = element_blank())
 ```
+
+]
+.pull-right[
+### Two-tailed test
+
+Null can be wrong in either direction.
+
+> Reject $H_0$ if $\lvert Z \rvert > 1.96$
+
+
+```{r sclt2s, fig.width=3.5, fig.height=3, dpi=350}
+  ggplot(NULL, aes(c(-3.5,3.5))) +
+    geom_area(stat = "function", fun = dnorm, fill = "#00998a", xlim = c(-1.96, 1.96)) +
+    geom_area(stat = "function", fun = dnorm, fill = "grey80", xlim = c(1.96, 3.5)) +
+    geom_area(stat='function', fun = dnorm, fill = 'grey80', xlim = c(-3.5,-1.96)) +
+    labs(x = "Z", y = "") +
+    scale_y_continuous(breaks = NULL,
+                       expand = expansion(mult=c(0,0.05))) +
+    scale_x_continuous(breaks = c(-1.96,0,1.96)) +
+    coord_cartesian(xlim = c(-3.5,3.5)) +
+    theme_minimal() +
+    theme(panel.grid.minor = element_blank())
+```
+]
 
 
 ---
@@ -456,7 +489,7 @@ $$
 ---
 # Present your hypothesis test
 
-> The mean resentment index score among white, non-Hispanic respondents in the 2012 ANES equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population $(t = xx$, $p = xx)$ and we conclude that the population mean is significantly more conservative than the neutral point on this scale. 
+> The mean resentment index score equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population $(Z = xx)$ and we conclude that the population mean is significantly more conservative on this scale. 
 >
 
 ---
@@ -470,4 +503,4 @@ class: inverse
   - pad your estimate by the margin of error
   
 - Test specific hypotheses about the population
-  - find probability of your sample given status quo expectation (null)
+  - reject (null) hypotheses that are unlikely to have produced your data 
