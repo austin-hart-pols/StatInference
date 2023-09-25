@@ -17,7 +17,7 @@ class: center, middle, inverse, title-slide
 # STATISTICAL INFERENCE
 ]
 .subtitle[
-## a guide to the unknown
+## and confidence intervals
 ]
 .author[
 ### Austin Hart
@@ -34,76 +34,46 @@ class: center, middle, inverse, title-slide
 
 
 
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 25px;
+    padding: 1em 4em 1em 4em;
+}
+&lt;/style&gt;
 
-# 3 flavors of inference
 
+# Statistical inference
 
-- **CAUSAL** inference  
-  - Attribution of cause to an outcome (X caused Y)  
-  - Inference b/c of FPCI  
+&gt; Process of using sample stats to learn about properties of a population.
   
-- **STATISTICAL** inference  
-  - Educated guess about "population" given sample
-  - Inference b/c population parameter unseen/unknowable
+- Used for 
+  - describing an unobserved/unobservable population  
+  - differentiating systematic vs random patterns
   
-- **EXTERNAL VALIDITY** inference
-  - Educated guess about generalizability of findings
-  - Considers other units, treatments, outcomes, settings, etc
+- Two approaches to statistical inference:  
+  - Confidence intervals: construct a plausible range around your estimate.   
+  - Hypothesis testing: calculate probability of observing your sample stat given some assumption about the population.  
+
 
 
 ---
-# Statistical Inference, 2 ways
-
-- **Confidence intervals**: add "margin of error" to construct a range of plausibility around your estimate. 
-
-&gt; I am 95% confidence that the range 10.4 to 11.2 captures the mean level of arsenic in DC public school water fountains.
-
-- **Hypothesis testing**: calculate probability of observing your sample given some assumption about the population
-
-&gt; I reject the hypothesis that DC public school fountains have a "safe" level of arsenic. The probability of observing a mean contamination of 10.8 from a "safe" population is 0.004. 
-
-
----
-class: inverse, middle
-
-# WHY STATISTICAL INFERENCE?
-
-### Sampling variability
-
-
----
-# Sampling and the need for inference
-
-&gt; What can data from a single sample tell us about the 
-&gt; population from which it was drawn?  
-  
+# Sampling variability and the need for inference
 
 - **Population**: entire 'world' of units the study aims to learn about
-  - *Parameter*: characteristics of the population, e.g., `\(\mu_y\)`  
+- *Parameter*: characteristics of the population, e.g., `\(\mu_y\)`  
 
 - **Sample**: 'slice' of data from the population
-  - *Sample statistic*: characteristic of sampled units, e.g., `\(\bar{y}\)`  
+- *Sample statistic*: characteristic of sampled units, e.g., `\(\bar{y}\)` or `\(Avg[y_i]\)`  
 
-- **Estimation**: sample stat as guide to pop parameter.
-
-- **Sampling Variability**: Every. Slice. Is. Different.
-
-
-
----
-# Every sample statistic is different.
-
-Variability in sample statistics
-
-- Different across samples: `\(\bar{y}_1 \neq \bar{y}_2\)`  
-
-- Different from target parameter: `\(\bar{y}_1 \neq \mu_y\)`
+- **Sampling Variability**: Sample stats are variable.
+  - Different across samples: `\(\bar{y}_1 \neq \bar{y}_2\)`   
+  - Different from target parameter: `\(\bar{y}_1 \neq \mu_y\)`
 
 
 ---
 # Sampling variability in action
 
-Consider the DCPS math proficiency, 2017
+### DCPS PARCC: math proficiency
 
 .pull-left[
 Population parameters
@@ -124,7 +94,7 @@ Population parameters
 
 .pull-left[
 ### Random Sample 1 (n = 25)
-- `\(\bar{y}_1\)` = 29.8
+- `\(\bar{y}_1\)` = 25.2
 
 &lt;img src="StatInference_files/figure-html/s1-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -132,7 +102,7 @@ Population parameters
 
 .pull-right[
 ### Random Sample 2 (n = 25)
-- `\(\bar{y}_2\)` = 21.9
+- `\(\bar{y}_2\)` = 32.3
 
 &lt;img src="StatInference_files/figure-html/s2-1.svg" style="display: block; margin: auto;" /&gt;
 
@@ -142,9 +112,40 @@ Population parameters
 ---
 class: inverse, middle
 
-# SAMPLING DISTRIBUTION
+# INTERLUDE: NORMAL DISTRIBUTIONS
 
-### The first step to inference
+
+---
+# Step 1: standard scores
+
+- `\(Z\)` score: distance from the mean expressed as number of standard deviations
+
+$$
+Z_i = \frac{y_i - \bar{y}}{s_y}
+$$
+- Eileen scored a 27 on the ACT. Nina scored 1300 on the SAT. Who did better?
+  - Mean ACT score = 21, sd = 5
+  - Mean SAT score = 1050, sd = 300
+
+
+
+---
+# Step 2: normal (Z) distribution
+
+- A continuous probability distribution for a random variable.  
+- 68-95-99 rule
+- How does curve change with different sd?
+
+&lt;img src="StatInference_files/figure-html/normaldist-1.svg" style="display: block; margin: auto;" /&gt;
+  
+  
+
+---
+class: inverse, middle
+
+# SAMPLING DISTRIBUTIONS
+
+### And the Central Limit Theorem
 
 
 ---
@@ -153,19 +154,19 @@ class: inverse, middle
 &gt; What if we had access to thousands of samples?
 
 
-- Select a random sample, size 25.  
+- Select a random sample of 25 schools.  
 
 - Calculate the mean math proficiency.  
 
 - Repeat 10,000 times.  
 
-- Plot the results.
+- Plot the 10,001 sample means.
 
 
 ---
 # Meet the sampling distribution
 
-&gt; Sampling distribution: distribution of ALL possible/observable sample statistics from a population.
+&gt; Sampling distribution of sample means: probability distribution of possible sample means from a population.
 
 
 
@@ -176,26 +177,18 @@ class: inverse, middle
 ]
 
 .pull-right[  
-Our sampling dist  
+Our sampling distribution  
 - Mean: 27
-- Median: 27
-- Range: 14.1 to 44.3
-- SD/SE: 4.1  
+- Median: 26.9
+- Range: 14.4 to 42.9
+- SE: 4.1  
 ]
-
-
----
-class: inverse, middle
-
-# CENTRAL LIMIT THEOREM
 
 
 ---
 # CLT and the Sampling Distribution
 
-&gt; We don't know if our one sample mean is close to the true population mean.   
-&gt; But...   
-&gt; the Central Limit Theorem proves that sample means:   
+The Central Limit Theorem proves that sample means:   
 $$
 \bar{y} \sim N(\mu_y,\sigma) 
 $$
@@ -216,18 +209,6 @@ $$
 
 
 ---
-# If you know 1 normal distribution...
-
-**68-95-99 rule**
-
-- 68% of sample means within `\(\sim1\)` SE of `\(\mu\)`
-- *95% within `\(\sim2\)` SEs*
-- 99.7% within `\(\sim3\)` SEs
-
-&lt;img src="StatInference_files/figure-html/sclt2-1.svg" style="display: block; margin: auto;" /&gt;
-
-
----
 class: inverse, middle
 
 # CONFIDENCE INTERVALS
@@ -236,183 +217,44 @@ class: inverse, middle
 
 
 ---
+# Key concepts
+
+- Significance: `\(\alpha =\)` Probability of rejecting true hypothesis. Typically set at `\(0.05\)`.
+
+- Confidence: `\((1-\alpha) * 100\% =\)` probability of accepting a true hypothesis 
+
+- Standard error: Standard deviation of sampling distribution
+
+- Margin of error: Expresses amt of random error for a given level of confidence.  
+
+
+
+---
 # Building a 95% confidence interval
   
   
 $$
-CI = \bar{y} \pm (1.96*\sigma_{\bar{y}})
+`\begin{aligned}
+CI &amp;= \bar{y} \pm Z_{\alpha/2}  * \sigma_{\bar{y}}\\
+95\% CI &amp;= \bar{y} \pm 1.96 * \sigma_{\bar{y}} \\
+\end{aligned}`
 $$
   
-&gt; Your sample mean is w/i 1.96 SEs of the true population mean.
-&gt; The chance I'm wrong? Only 5%.  
-
 - Sample stat: sample mean, `\(\bar{y}\)`
 
-- Margin of error: `\(1.96 * \sigma_{\bar{y}}\)` 
+- Standard error, sample mean: `\(\sigma_{\bar{y}} = \frac{s_y}{\sqrt{n}}\)`
 
-- Standard error, sample mean
-$$
-\sigma_{\bar{y}} = \frac{s_y}{\sqrt{n}}
-$$
+- Margin of error: For 95% confidence: `\(1.96 * \sigma_{\bar{y}}\)` 
 
+- Why it works: 95% of sample means fall w/i 1.96 SEs of the population mean. Only 5% fall outside that range. 
 
----
-class: inverse, middle
-
-# STATISTICAL INFERENCE
-Pulling it all together
 
 ---
 # Your own CI
 
-&gt; The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-&gt; The mean resentment index score is 0.66, w/a standard deviation of 0.024.
-&gt;
-&gt; Calculate and interpret a 95% confidence interval.
-
---
-
-.pull-left[
-- *What we know:*
-  - `\(n = 3,273\)`
-  - `\(\bar{y}=0.66\)`
-  - `\(s_y = 0.024\)`
-
-]
-
---
-
-.pull-right[
-- *What we need:* 
-  - Standard error, `\(\sigma_{\bar{y}}=s_y/\sqrt{n}\)` 
-  - Margin of error, `\(ME=1.96*\sigma_{\bar{y}}\)`
-  - Interval `\(\bar{y} \pm ME\)`
-]
-  
----
-# Reporting your CI
-
-&gt; The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-&gt; The mean resentment index score is 0.660, w/a standard deviation of 0.024.
-&gt;
-&gt; Calculate and interpret a 95% confidence interval.
-
-I am 95% confident that the range 0.652 to 0.668 captures the mean resentment index score for the population of white, non-Hispanic adults in 2012.
+&gt; Follow along for a full example.
 
 
-
----
-class: inverse, middle
-
-# HYPOTHESIS TESTING
-
-### Your data versus the status quo
-
----
-# Logic of hypothesis testing
-
-&gt; Given a hypothesis about a population parameter, calculate the probability of finding your sample statistic.  
-&gt; Reject the hypothesis when probability is exceptionally low, typically below 0.05. 
-
-Procedure:
-1. Specify hypotheses
-  - Null hypothesis: status quo expectation
-  - Alternative: your expectation  
-  
-2. Select appropriate test statistic  
-
-3. Specify decision rule for rejecting null  
-
-4. Compute test statistic  
-
-5. Conclude
-
-
----
-# Setting up hypotheses
-
-- **Alternative hypothesis,** `\(H_A\)`
-  - Your expectation of the population/truth
-  - Empirical implication of your theory
-
-- **Null hypothesis,** `\(H_0\)`
-  - Pure logical opposite of `\(H_A\)`
-  - Status quo expectation: you've found nothing new
-
-- TIPS
-  - ALWAYS frame hypotheses in terms of parameters
-  - Science is all about the null. 
-  
-  
----
-# Select the right test statistic
-
-&gt; A test statistic is a number that standardizes your sample information in light of the null hypothesis.  
-&gt; It expresses the deviation of the sample mean from the hypothesized parameter as a number of standard errors.
-
-
-For a sample mean, you might compute the `\(Z\)`-statistic:
-
-$$
-Z = \frac{\bar{y}-\mu_0}{s_y/\sqrt{n}}
-$$
-
-
-
----
-# To reject or not to reject?
-
-### Set a decision rule for rejecting the null  
-
-
-- Choose a level of significance, typically `\(\alpha = 0.05\)`  
-
-- Find the critical value, `\(Z^*\)`  
-  
-- Reject null if test statistic larger than critical value
-
-
----
-# Finding your critical value, 95% significance
-
-.pull-left[
-### Upper-tailed test
-
-Null can only be wrong in one direction.
-
-&gt; Reject `\(H_0\)` if `\(Z &gt; 1.645\)`
-
-&lt;img src="StatInference_files/figure-html/sclt1s-1.svg" style="display: block; margin: auto;" /&gt;
-
-]
-.pull-right[
-### Two-tailed test
-
-Null can be wrong in either direction.
-
-&gt; Reject `\(H_0\)` if `\(\lvert Z \rvert &gt; 1.96\)`
-
-
-&lt;img src="StatInference_files/figure-html/sclt2s-1.svg" style="display: block; margin: auto;" /&gt;
-]
-
-
----
-# Your own hypothesis test
-
-&gt; The 2012 ANES survey includes a sample 3,273 white, non-Hispanic adults. 
-&gt; The mean resentment index score is 0.660, and the standard deviation is 0.024.
-&gt;
-&gt; Evaluate the null hypothesis that the population is racially neutral or liberal on this scale.
-
-
-
-
----
-# Present your hypothesis test
-
-&gt; The mean resentment index score equals 0.66. It is highly unlikely that we see this in a racially neutral or liberal population `\((Z = xx)\)` and we conclude that the population mean is significantly more conservative on this scale. 
-&gt;
 
 ---
 class: inverse
@@ -424,8 +266,7 @@ class: inverse
 - Embrace uncertainty with confidence intervals
   - pad your estimate by the margin of error
   
-- Test specific hypotheses about the population
-  - reject (null) hypotheses that are unlikely to have produced your data 
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
